@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Mock Interview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .recording {
+            background: #ef4444 !important;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+        }
+
+        .spinner {
+            border: 10px solid #e5e7eb;
+            border-top: 10px solid #06b6d4;
+            border-radius: 50%;
+            width: 90px;
+            height: 90px;
+            animation: spin 1.5s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+    <nav class="bg-gradient-to-r from-cyan-400 to-sky-500 text-white p-6 shadow-lg">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-bold">AI Mock Interview</h1>
+            <div class="flex gap-6 items-center text-lg">
+                <span>Candidate: <strong id="name"></strong></span>
+                <span>ID: <strong id="uid"></strong></span>
+                <span>Role: <strong id="role"></strong></span>
+                <span>Company: <strong id="company"></strong></span>
+                <a href="/logout"
+                    class="bg-white text-cyan-600 px-6 py-3 rounded-lg font-bold hover:bg-gray-100 transition shadow-md">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-6xl mx-auto p-10 grid md:grid-cols-2 gap-12">
+        <!-- Interviewer -->
+        <div class="text-center">
+            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=500" alt="Interviewer"
+                class="w-80 h-80 rounded-full mx-auto shadow-xl border-8 border-cyan-400 object-cover">
+            <p class="mt-6 text-2xl font-bold text-gray-800">Your AI Interviewer</p>
+        </div>
+
+        <!-- Question Panel -->
+        <div class="bg-white rounded-3xl p-10 shadow-2xl border border-gray-100">
+            <div class="text-center mb-8">
+                <h2 id="q" class="text-3xl font-bold leading-relaxed text-gray-900"></h2>
+                <p class="mt-4 text-xl text-cyan-600">Question <span id="num">1</span> of 5</p>
+            </div>
+
+            <audio id="qa" controls class="w-full mb-8 rounded-lg"></audio>
+
+            <!-- Recording Controls -->
+            <div class="text-center space-y-8">
+                <button id="recordBtn"
+                    class="bg-gradient-to-r from-cyan-500 to-sky-500 hover:from-cyan-600 hover:to-sky-600 text-white px-16 py-8 rounded-3xl text-3xl font-bold shadow-xl transition transform hover:scale-105">
+                    Start Recording
+                </button>
+
+                <div id="recordingStatus" class="hidden">
+                    <p class="text-4xl text-red-500 font-bold animate-pulse">Recording... Speak now!</p>
+                </div>
+
+                <div id="yourAnswer" class="hidden space-y-4">
+                    <p class="text-2xl font-bold text-green-600">Your Answer (Auto-saved)</p>
+                    <audio id="playback" controls class="w-full rounded-lg"></audio>
+                    <p class="text-sm text-gray-500">Re-record anytime → auto-saves instantly</p>
+                </div>
+            </div>
+
+            <!-- Feedback Box -->
+            <div id="fb"
+                class="mt-10 bg-gray-50 p-8 rounded-2xl text-center text-lg min-h-32 border border-cyan-200 shadow-inner">
+                <p class="text-gray-500">Click "Start Recording" to begin</p>
+            </div>
+
+            <!-- Answer Counter -->
+            <div id="answerStatus" class="mt-8 text-center">
+                <p class="text-2xl font-bold text-yellow-600">Answers Recorded: <span id="count">0</span>/5</p>
+            </div>
+
+            <!-- Navigation -->
+            <div class="flex justify-between mt-12">
+                <button id="prevBtn"
+                    class="bg-gray-200 hover:bg-gray-300 px-10 py-5 rounded-2xl text-2xl font-bold text-gray-700 transition">
+                    Previous
+                </button>
+                <div id="nextArea"></div>
+            </div>
+
+            <!-- Final Submit Button -->
+            <div id="submitArea" class="mt-10"></div>
+
+            <!-- Loading + Debug -->
+            <div id="loadingArea" class="hidden text-center mt-12">
+                <div class="spinner mx-auto"></div>
+                <p class="mt-8 text-3xl text-cyan-600 font-bold">Evaluating your Answers...</p>
+                <p class="mt-4 text-xl text-gray-600">Analyzing all answers • This takes 30–60 seconds</p>
+                <div id="debugMsg"
+                    class="mt-8 text-red-500 font-mono text-sm bg-gray-50 p-6 rounded-xl max-w-2xl mx-auto hidden border border-red-300">
+                    Error will appear here
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let recorder, audioBlob = null;
+        let currentIndex = 0;
+
+        navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+            recorder = new MediaRecorder(stream);
+            recorder.ondataavailable = e => { audioBlob = e.data; };
+            recorder.onstop = async () => {
+                if (audioBlob) {
+                    const form = new FormData();
+                    form.append("audio", audioBlob, `answer_q${currentIndex + 1}.wav`);
+                    await fetch("/api/submit", { method: "POST", body: form });
+
+                    const url = URL.createObjectURL(audioBlob);
+                    document.getElementById("playback").src = url;
+                    document.getElementById("yourAnswer").classList.remove("hidden");
+                    document.getElementById("fb").innerHTML = `<p class='text-green-600 text-2xl font-bold'>Answer ${currentIndex + 1} saved!</p>`;
+                    updateAnswerCount();
+                }
+
+                document.getElementById("recordBtn").textContent = "Re-record Answer";
+                document.getElementById("recordBtn").classList.remove("recording");
+                document.getElementById("recordingStatus").classList.add("hidden");
+            };
+        });
+
+        document.getElementById("recordBtn").onclick = () => {
+            if (recorder.state === "recording") {
+                recorder.stop();
+            } else {
+                recorder.start();
+                document.getElementById("recordBtn").textContent = "Stop Recording";
+                document.getElementById("recordBtn").classList.add("recording");
+                document.getElementById("recordingStatus").classList.remove("hidden");
+                document.getElementById("yourAnswer").classList.add("hidden");
+            }
+        };
+
+        document.getElementById("prevBtn").onclick = () => fetch("/api/prev").then(loadQuestion);
+
+        const updateAnswerCount = () => {
+            fetch("/api/question").then(r => r.json()).then(d => {
+                const count = d.answers.filter(a => a !== null).length;
+                document.getElementById("count").textContent = count;
+            });
+        };
+
+        const loadQuestion = async () => {
+            const res = await fetch("/api/question");
+            const d = await res.json();
+            currentIndex = d.index - 1;
+
+            document.getElementById("q").textContent = d.question;
+            document.getElementById("num").textContent = d.index;
+            document.getElementById("qa").src = d.audio;
+            document.getElementById("name").textContent = d.user_info.name;
+            document.getElementById("uid").textContent = d.user_info.uid;
+            document.getElementById("role").textContent = d.user_info.role;
+            document.getElementById("company").textContent = d.user_info.company;
+
+            const answeredCount = d.answers.filter(a => a !== null).length;
+            document.getElementById("count").textContent = answeredCount;
+            document.getElementById("answerStatus").classList.remove("hidden");
+
+            document.getElementById("recordBtn").textContent = d.answers[currentIndex] ? "Re-record Answer" : "Start Recording";
+            document.getElementById("yourAnswer").classList.add("hidden");
+            document.getElementById("playback").src = "";
+
+            const nextArea = document.getElementById("nextArea");
+            const submitArea = document.getElementById("submitArea");
+
+            if (d.index === 5) {
+                nextArea.innerHTML = "";
+                submitArea.innerHTML = `
+          <button id="finalSubmit" class="w-full bg-gradient-to-r from-cyan-500 to-sky-500 hover:from-cyan-600 hover:to-sky-600 text-white py-10 rounded-3xl text-4xl font-bold shadow-2xl transform hover:scale-105 transition">
+            Submit All & Get Final Score
+          </button>`;
+                document.getElementById("finalSubmit").onclick = async () => {
+                    document.getElementById("submitArea").classList.add("hidden");
+                    document.getElementById("loadingArea").classList.remove("hidden");
+                    document.getElementById("debugMsg").classList.add("hidden");
+                    document.getElementById("debugMsg").textContent = "";
+
+                    const r = await fetch("/api/submit_all", { method: "POST" });
+                    const data = await r.json();
+
+                    if (r.ok) {
+                        setTimeout(() => location.href = "/results", 3000);
+                    } else {
+                        document.getElementById("debugMsg").textContent = data.error || "Unknown error occurred. Please try again.";
+                        document.getElementById("debugMsg").classList.remove("hidden");
+                    }
+                };
+            } else {
+                submitArea.innerHTML = "";
+                nextArea.innerHTML = `
+          <button id="nextBtn" class="bg-gradient-to-r from-cyan-500 to-sky-500 hover:from-cyan-600 hover:to-sky-600 text-white px-12 py-6 rounded-2xl text-2xl font-bold transition">
+            Next Question
+          </button>`;
+                document.getElementById("nextBtn").onclick = () => fetch("/api/next").then(loadQuestion);
+            }
+        };
+
+        loadQuestion();
+    </script>
+</body>
+
+</html>

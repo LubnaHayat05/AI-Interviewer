@@ -1,0 +1,285 @@
+<!-- <!DOCTYPE html>
+<html>
+
+<head>
+    <title>Start Interview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex items-center justify-center">
+    <div class="bg-white p-10 rounded-3xl shadow-2xl w-full max-w-2xl">
+        <h1 class="text-4xl font-bold text-center mb-8 text-cyan-600">AI Mock Interview</h1>
+        <form id="form" class="space-y-6">
+            <input name="name" placeholder="Full Name" required class="w-full p-4 border-2 rounded-xl">
+            <input name="uid" placeholder="Employee/Roll No" required class="w-full p-4 border-2 rounded-xl">
+            <select name="role" class="w-full p-4 border-2 rounded-xl text-lg">
+                <option>SDE</option>
+                <option>DevOps</option>
+                <option>HR</option>
+                <option>Marketing</option>
+                <option>Product</option>
+                <option>Data Science</option>
+            </select>
+            <input name="company" placeholder="Target Company (e.g. Google, Microsoft, Amazon)"
+                class="w-full p-4 border-2 rounded-xl" list="companies">
+            <datalist id="companies">
+                <option>Google</option>
+                <option>Microsoft</option>
+                <option>Amazon</option>
+                <option>Meta</option>
+                <option>Apple</option>
+                <option>Netflix</option>
+                <option>Goldman Sachs</option>
+                <option>JPMorgan</option>
+            </datalist>
+            <input type="file" name="resume" accept=".pdf" required class="w-full p-4 border-2 rounded-xl">
+            <button type="submit"
+                class="w-full bg-gradient-to-r from-cyan-500 to-sky-500 text-white py-5 rounded-xl text-xl font-bold">
+                Generate Real Interview Questions
+            </button>
+        </form>
+
+        <div id="progress" class="hidden mt-10 text-center">
+            <svg class="animate-spin h-16 w-16 text-cyan-600 mx-auto" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+            </svg>
+            <p class="mt-4 text-xl text-cyan-600">Scraping real questions from Glassdoor, LeetCode...</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("form").onsubmit = async e => {
+            e.preventDefault();
+            document.getElementById("form").classList.add("hidden");
+            document.getElementById("progress").classList.remove("hidden");
+            const f = new FormData(e.target);
+            const r = await fetch("/register_interview", { method: "POST", body: f });
+            if (r.ok) setTimeout(() => location.href = "/interview", 3000);
+        };
+    </script>
+</body>
+
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Start Interview</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white border-r border-gray-200 flex flex-col">
+        <div class="p-6 border-b border-gray-100">
+            <h1 class="text-2xl font-bold text-cyan-600">AInterviewer</h1>
+        </div>
+        <nav class="flex-1 px-4 py-6 space-y-2">
+            <a href="/dashboard"
+                class="flex items-center px-4 py-3 text-gray-700 hover:bg-cyan-50 hover:text-cyan-600 rounded-xl font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 12l2-2m0 0l7-7 7 7M13 5v6h6m-6 0v8m0-8H7m0 0H3" />
+                </svg>
+                Dashboard
+            </a>
+            <a href="/scheduled"
+                class="flex items-center px-4 py-3 text-gray-700 hover:bg-cyan-50 hover:text-cyan-600 rounded-xl font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10m-5 4h5m-5 4h5m-5-4H7m0 4h5" />
+                </svg>
+                Scheduled Interview
+            </a>
+            <a href="/all"
+                class="flex items-center px-4 py-3 text-gray-700 hover:bg-cyan-50 hover:text-cyan-600 rounded-xl font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 12h14m-7 4h7" />
+                </svg>
+                All Interview
+            </a>
+            <a href="/billing"
+                class="flex items-center px-4 py-3 text-gray-700 hover:bg-cyan-50 hover:text-cyan-600 rounded-xl font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8c1.657 0 3 1.343 3 3H9c0-1.657 1.343-3 3-3zM4 9v2a8 8 0 0016 0V9m-7 4v3m0 4h.01" />
+                </svg>
+                Billing
+            </a>
+            <a href="/settings"
+                class="flex items-center px-4 py-3 text-gray-700 hover:bg-cyan-50 hover:text-cyan-600 rounded-xl font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 15v2m0-8v2m0 4h.01M4 6h16M4 10h16M4 14h16M4 18h16" />
+                </svg>
+                Settings
+            </a>
+        </nav>
+        <div class="p-6">
+            <a href="/dashboard"
+                class="block w-full bg-gradient-to-r from-gray-200 to-gray-300 text-gray-600 py-3 rounded-xl font-semibold text-center cursor-not-allowed">
+                Back to Dashboard
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col">
+        <!-- Top Bar -->
+        <header class="flex items-center justify-between bg-white border-b border-gray-200 px-8 py-6">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800">Welcome back, {{ user.name }}!</h2>
+                <p class="text-gray-500">AI-Driven Interviews, Hassle-Free Hiring</p>
+            </div>
+            <div class="flex items-center space-x-6">
+                <!-- <div class="text-right">
+                    <p class="text-sm text-gray-600">Interview Credits</p>
+                    <p class="text-2xl font-bold text-cyan-600">12 remaining</p>
+                </div>
+                <button class="relative">
+                    <svg class="w-7 h-7 text-gray-600 hover:text-cyan-600" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 17h5l-1.405-1.405M19 13V8a7 7 0 00-14 0v5a7 7 0 0014 0z" />
+                    </svg>
+                    <span class="absolute -top-1 -right-1 bg-red-500 w-3 h-3 rounded-full"></span>
+                </button> -->
+                <img src="https://randomuser.me/api/portraits/men/44.jpg"
+                    class="w-12 h-12 rounded-full border-4 border-cyan-500 shadow-lg">
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <section class="flex-1 p-10 bg-gray-50">
+            <div class="bg-white rounded-3xl shadow-2xl border border-cyan-100 max-w-4xl mx-auto p-12">
+                <div class="text-center mb-10">
+                    <h1
+                        class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500 mb-4">
+                        Start Your AI Mock Interview
+                    </h1>
+                    <p class="text-xl text-gray-600">Get real company-specific questions • Ace your dream job</p>
+                </div>
+
+                <!-- Start Interview Form -->
+                <form id="form" class="space-y-8">
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Full Name</label>
+                            <input name="name" value="{{ user.name }}" readonly
+                                class="w-full p-4 bg-gray-100 border-2 border-gray-300 rounded-xl text-gray-700 font-medium">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Employee / Roll No</label>
+                            <input name="uid" placeholder="Enter your unique ID" required
+                                class="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none">
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Select Role</label>
+                            <select name="role"
+                                class="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none text-lg">
+                                <option>SDE</option>
+                                <option>DevOps</option>
+                                <option>HR</option>
+                                <option>Marketing</option>
+                                <option>Product</option>
+                                <option>Data Science</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Target Company (Optional)</label>
+                            <input name="company" placeholder="e.g. Google, Amazon, Microsoft"
+                                class="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none"
+                                list="companies">
+                            <datalist id="companies">
+                                <option>Google</option>
+                                <option>Microsoft</option>
+                                <option>Amazon</option>
+                                <option>Meta</option>
+                                <option>Apple</option>
+                                <option>Netflix</option>
+                                <option>Goldman Sachs</option>
+                                <option>JPMorgan</option>
+                            </datalist>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Upload Resume (PDF)</label>
+                        <div
+                            class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-cyan-500 transition">
+                            <input type="file" name="resume" accept=".pdf" required class="hidden" id="resumeInput">
+                            <label for="resumeInput" class="cursor-pointer">
+                                <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                </svg>
+                                <p class="text-lg text-gray-600">Click to upload or drag and drop</p>
+                                <p class="text-sm text-gray-500 mt-2">PDF up to 10MB</p>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit"
+                        class="w-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white py-6 rounded-2xl text-2xl font-bold shadow-2xl transition transform hover:scale-[1.02] flex items-center justify-center gap-4">
+                        <span>Generate Real Interview Questions</span>
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                d="M13 5l7 7-7 7M5 5h12" />
+                        </svg>
+                    </button>
+                </form>
+
+                <!-- Loading Animation -->
+                <div id="progress" class="hidden mt-16 text-center">
+                    <svg class="animate-spin h-20 w-20 text-cyan-600 mx-auto" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                        </circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                    </svg>
+                    <p class="mt-8 text-2xl font-bold text-cyan-600">
+                        Scraping real questions from Glassdoor, LeetCode, Levels.fyi...
+                    </p>
+                    <p class="mt-4 text-lg text-gray-600">This takes 10–20 seconds</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.getElementById("form").onsubmit = async e => {
+            e.preventDefault();
+            document.getElementById("form").classList.add("hidden");
+            document.getElementById("progress").classList.remove("hidden");
+            const f = new FormData(e.target);
+            const r = await fetch("/register_interview", { method: "POST", body: f });
+            if (r.ok) {
+                setTimeout(() => location.href = "/interview", 3000);
+            } else {
+                alert("Error generating questions. Try again.");
+                document.getElementById("form").classList.remove("hidden");
+                document.getElementById("progress").classList.add("hidden");
+            }
+        };
+    </script>
+</body>
+
+</html>
