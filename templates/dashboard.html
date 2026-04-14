@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>AInterviewer - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex">
+    <!-- FIXED SIDEBAR -->
+    <aside class="w-64 bg-white border-r border-gray-200 flex flex-col fixed inset-y-0 left-0 z-50">
+        <div class="p-6 border-b border-gray-100">
+            <h1 class="text-2xl font-bold text-cyan-600">AInterviewer</h1>
+        </div>
+        <nav class="flex-1 px-4 py-6 space-y-2">
+            <a href="#dashboard"
+                class="nav-link flex items-center px-4 py-3 bg-cyan-50 text-cyan-600 rounded-xl font-bold border-l-4 border-cyan-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 12l2-2m0 0l7-7 7 7M13 5v6h6m-6 0v8m0-8H7m0 0H3" />
+                </svg>
+                Dashboard
+            </a>
+            <a href="#scheduled"
+                class="nav-link flex items-center px-4 py-3 text-gray-700 hover:bg-cyan-50 hover:text-cyan-600 rounded-xl font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10m-5 4h5m-5 4h5m-5-4H7m0 4h5" />
+                </svg>
+                Scheduled Interview
+            </a>
+            <a href="#all"
+                class="nav-link flex items-center px-4 py-3 text-gray-700 hover:bg-cyan-50 hover:text-cyan-600 rounded-xl font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 12h14m-7 4h7" />
+                </svg>
+                All Interview
+            </a>
+            <a href="#billing"
+                class="nav-link flex items-center px-4 py-3 text-gray-700 hover:bg-cyan-50 hover:text-cyan-600 rounded-xl font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8c1.657 0 3 1.343 3 3H9c0-1.657 1.343-3 3-3zM4 9v2a8 8 0 0016 0V9m-7 4v3m0 4h.01" />
+                </svg>
+                Billing
+            </a>
+            <a href="#settings"
+                class="nav-link flex items-center px-4 py-3 text-gray-700 hover:bg-cyan-50 hover:text-cyan-600 rounded-xl font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 15v2m0-8v2m0 4h.01M4 6h16M4 10h16M4 14h16M4 18h16" />
+                </svg>
+                Settings
+            </a>
+        </nav>
+        <div class="p-6">
+            <a href="/register_interview_page"
+                class="block w-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white py-4 rounded-xl font-bold text-center hover:from-blue-700 hover:to-cyan-600 shadow-lg">
+                + Create New Interview
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-1 ml-64 flex flex-col">
+        <!-- FIXED HEADER -->
+        <header class="flex items-center justify-between bg-white border-b border-gray-200 px-8 py-6">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800">Welcome back, {{ user.name }}!</h2>
+                <p class="text-gray-500">AI-Driven Interviews, Hassle-Free Hiring</p>
+            </div>
+            <div class="flex items-center space-x-6">
+                <!-- <div class="text-right">
+                    <p class="text-sm text-gray-600">Interview Credits</p>
+                    <p class="text-2xl font-bold text-cyan-600">12 remaining</p>
+                </div> -->
+                <!-- <button class="relative">
+                    <svg class="w-7 h-7 text-gray-600 hover:text-cyan-600" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 17h5l-1.405-1.405M19 13V8a7 7 0 00-14 0v5a7 7 0 0014 0z" />
+                    </svg>
+                    <span class="absolute -top-1 -right-1 bg-red-500 w-3 h-3 rounded-full"></span>
+                </button> -->
+                <img src="https://randomuser.me/api/portraits/men/44.jpg"
+                    class="w-12 h-12 rounded-full border-4 border-cyan-500 shadow-lg">
+            </div>
+        </header>
+
+        <!-- DYNAMIC CONTENT -->
+        <section id="content" class="flex-1 p-10 overflow-y-auto">
+            <!-- DASHBOARD CONTENT -->
+            <div id="dashboard" class="content-page">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+                    <div class="bg-white p-8 rounded-2xl shadow-xl border border-cyan-100">
+                        <p class="text-gray-600 text-sm font-medium">Total Interviews</p>
+                        <p class="text-4xl font-bold text-gray-800 mt-2">0</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-xl border border-blue-100">
+                        <p class="text-gray-600 text-sm font-medium">Scheduled Today</p>
+                        <p class="text-4xl font-bold text-blue-600 mt-2">0</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-xl border border-green-100">
+                        <p class="text-gray-600 text-sm font-medium">Avg. Score</p>
+                        <p class="text-4xl font-bold text-green-600 mt-2">0/50</p>
+                    </div>
+
+                </div>
+                <div class="bg-white rounded-3xl shadow-xl border border-cyan-100 p-10">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-8">Recent Interviews</h3>
+                    <div class="text-center py-20">
+                        <p class="text-xl text-gray-500">No interviews yet. Create your first one!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCHEDULED -->
+            <div id="scheduled" class="content-page hidden">
+                <h1 class="text-4xl font-bold text-gray-800 mb-6">Scheduled Interviews</h1>
+                <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-8 py-6 text-left text-gray-700 font-bold">Candidate</th>
+                                <th class="px-8 py-6 text-left text-gray-700 font-bold">Role</th>
+                                <th class="px-8 py-6 text-left text-gray-700 font-bold">Date & Time</th>
+                                <th class="px-8 py-6 text-left text-gray-700 font-bold">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-t">
+                                <td class="px-8 py-6">Rajesh Kumar</td>
+                                <td>SDE</td>
+                                <td>Nov 15 • 2:00 PM</td>
+                                <td><span class="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full">Pending</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ALL INTERVIEWS -->
+            <div id="all" class="content-page hidden">
+                <h1 class="text-4xl font-bold text-gray-800 mb-6">All Interviews</h1>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white rounded-2xl shadow-xl p-6 border border-cyan-100">
+                        <h3 class="text-xl font-bold">Google SDE</h3>
+                        <p class="text-gray-600">Rajesh • Nov 8</p>
+                        <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">48/50</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BILLING -->
+            <div id="billing" class="content-page hidden">
+                <h1 class="text-4xl font-bold text-gray-800 mb-6">Billing & Plans</h1>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="bg-white rounded-3xl shadow-xl p-8 border-2 border-cyan-500">
+                        <h3 class="text-2xl font-bold text-center">Pro Plan</h3>
+                        <p class="text-5xl font-bold text-center mt-4">$49<span class="text-xl text-gray-500">/mo</span>
+                        </p>
+                        <button class="w-full mt-8 bg-cyan-600 text-white py-4 rounded-xl font-bold">Current
+                            Plan</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SETTINGS -->
+            <div id="settings" class="content-page hidden">
+                <h1 class="text-4xl font-bold text-gray-800 mb-6">Settings</h1>
+                <div class="bg-white rounded-3xl shadow-xl p-10">
+                    <h2 class="text-2xl font-bold mb-6">Profile</h2>
+                    <input value="{{ user.name }}" class="w-full p-4 border rounded-xl mb-4" readonly>
+                    <input value="{{ user.email }}" class="w-full p-4 border rounded-xl" readonly>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // SMOOTH NAVIGATION
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                const target = link.getAttribute('href').substring(1);
+
+                // Update active link
+                document.querySelectorAll('.nav-link').forEach(l => {
+                    l.classList.remove('bg-cyan-50', 'text-cyan-600', 'font-bold', 'border-l-4', 'border-cyan-600');
+                    l.classList.add('text-gray-700', 'hover:bg-cyan-50', 'hover:text-cyan-600');
+                });
+                link.classList.add('bg-cyan-50', 'text-cyan-600', 'font-bold', 'border-l-4', 'border-cyan-600');
+                link.classList.remove('text-gray-700');
+
+                // Show content
+                document.querySelectorAll('.content-page').forEach(page => page.classList.add('hidden'));
+                document.getElementById(target).classList.remove('hidden');
+
+                // Update URL without reload
+                history.pushState({}, '', '/' + target);
+            });
+        });
+
+        // Load from URL on refresh
+        window.addEventListener('load', () => {
+            const hash = window.location.pathname.substring(1) || 'dashboard';
+            document.querySelector(`a[href="#${hash}"]`)?.click();
+        });
+    </script>
+</body>
+
+</html>
